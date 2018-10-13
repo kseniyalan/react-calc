@@ -1,46 +1,14 @@
 /*** LESS COLORS ***/
 
 /* Gray */
-@grayBg: #ebebeb; /*Серый фон колонок*/
-@lightGray: #c0c0c0; /*Серые границы, Линии в спойлах, неактивные иконки, фон кружков вакансий, неактивный скилл и другое*/
-@darkGray: #929292; /*Серый текст в вакансиях, опыте работы и прочем, подписи под диаграммами, found 7 items и другое*/
-@dark: #444;
+@lightBg: #ebebeb; /*Фон кнопок*/
+@darkBg: #c0c0c0; /*Фон калькулятора*/
 
 
 /* LESS OTHER */
 .square(@size){
 	width: @size;
 	height: @size;
-}
-
-.border-rad(@radius){
-	-webkit-border-radius: @radius;
-	-moz-border-radius: @radius;
-	border-radius: @radius;
-}
-
-.leftBorderRad(@radius){
-	-webkit-border-radius: @radius 0 0 @radius;
-	-moz-border-radius: @radius 0 0 @radius;
-	border-radius: @radius 0 0 @radius;
-}
-
-.rightBorderRad(@radius){
-	-webkit-border-radius: 0 @radius @radius 0;
-	-moz-border-radius: 0 @radius @radius 0;
-	border-radius: 0 @radius @radius 0;
-}
-
-.leftTop(@left, @top){
-	position: absolute;
-	left: @left;
-	top: @top;
-}
-
-.rightTop(@right, @top){
-	position: absolute;
-	right: @right;
-	top: @top;
 }
 
 .noUserSelect{
