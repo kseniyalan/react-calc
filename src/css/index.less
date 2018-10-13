@@ -29,9 +29,21 @@ body {
 #root{
 	.square(100%);
 	min-height: 100%;
+	display: flex;
+	align-items: center;
+	align-content: center;
+	justify-content: center;
+	background: url('./bg.jpg') center center no-repeat;
+	background-size: cover;
 }
 
 .App{
-	.square(100%);
-	min-height: 100%;
+	width: 50vmin;
+	//max-width: 400px;
+	height: 75vmin;
+	//max-height: 650px;
+	opacity: 0.7;
+	background-color: @grayBg;
+	border: 1px solid green;
+
 }
