@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './css/App.less';
+import classNames from 'classnames';
 
 import Button from './Button';
 import Display from './Display';
@@ -10,6 +11,11 @@ class App extends Component {
 		previousInput: '',
 		currentOperation: '',
 		dropInput: false,
+		error: false,
+	}
+
+	isCorrectResult(result) {
+		return Number.isFinite(result) && !Number.isNaN(result);
 	}
 
 	onClear() {
@@ -18,11 +24,12 @@ class App extends Component {
 			previousInput: '',
 			currentOperation: '',
 			dropInput: false,
+			error: false,
 		});
 	}
 
 	onClearEntry() {
-		this.setState({currentInput: ''});
+		this.setState({currentInput: '', error: false});
 	}
 
 	onDigit(digit) {
@@ -34,6 +41,7 @@ class App extends Component {
 		this.setState({
 			currentInput: `${current}${digit}`,
 			dropInput: false,
+			error: false,
 		});
 	}
 
@@ -47,6 +55,7 @@ class App extends Component {
 		if (!this.state.dropInput) {
 			this.setState({
 				currentInput: this.state.currentInput.slice(0, -1),
+				error: false,
 			});
 		}
 	}
@@ -72,6 +81,7 @@ class App extends Component {
 				this.setState({
 					currentInput: `${result}`,
 					dropInput: true,
+					error: !this.isCorrectResult(result),
 				});
 			}
 		}
@@ -84,6 +94,7 @@ class App extends Component {
 			previousInput: this.state.currentInput,
 			currentInput: '',
 			currentOperation: op,
+			error: false,
 		});
 	}
 
@@ -101,15 +112,17 @@ class App extends Component {
 	onResult() {
 		return new Promise((resolve, reject) => {
 			if (this.state.previousInput !== '') {
+				const result = this.binaryOperation(
+					this.state.currentOperation,
+					this.state.previousInput,
+					this.state.currentInput
+				);
 				this.setState({
 					previousInput: '',
-					currentInput: this.binaryOperation(
-						this.state.currentOperation,
-						this.state.previousInput,
-						this.state.currentInput
-					),
+					currentInput: `${result}`,
 					currentOperation: '',
 					dropInput: true,
+					error: !this.isCorrectResult(result),
 				}, resolve);
 			} else {
 				resolve();
@@ -133,7 +146,7 @@ class App extends Component {
 
 	render() {
 		return (
-			<div className="App">
+			<div className={classNames('App', {shake: this.state.error})}>
 				<div className="btns-wrap">
 					<Display>
 						{this.state.previousInput}
