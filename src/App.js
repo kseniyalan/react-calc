@@ -117,6 +117,20 @@ class App extends Component {
 		});
 	}
 
+	operationSymbol(op) {
+		switch(op) {
+			case 'percent': return <span>%</span>;
+			case 'root': return <span>&#x221a;</span>;
+			case 'square': return <span>x<sup>2</sup></span>;
+			case 'reciprocal': return <span>1/x</span>;
+			case 'divide': return <span>&#x00F7;</span>;
+			case 'multiply': return <span>&#x00d7;</span>;
+			case 'minus': return <span>&#x2212;</span>;
+			case 'plus': return <span>+</span>;
+		}
+		return op;
+	}
+
 	render() {
 		return (
 			<div className="App">
@@ -124,32 +138,32 @@ class App extends Component {
 					<Display>
 						{this.state.previousInput}
 						&nbsp;
-						{this.state.currentOperation}
+						{this.operationSymbol(this.state.currentOperation)}
 						&nbsp;
-						{this.state.currentInput}
+						{this.state.currentInput !== '' ? this.state.currentInput : (this.state.currentOperation === '' ? '0' : '')}
 					</Display>
 				</div>
 				<div className="btns-wrap">
 					<Button onClick={this.onUnary.bind(this, 'percent')}>%</Button>
-					<Button onClick={this.onUnary.bind(this, 'root')}>&#x221a;</Button>
-					<Button onClick={this.onUnary.bind(this, 'square')}>x<sup>2</sup></Button>
-					<Button onClick={this.onUnary.bind(this, 'reciprocal')}>1/x</Button>
+					<Button onClick={this.onUnary.bind(this, 'root')}>{this.operationSymbol('root')}</Button>
+					<Button onClick={this.onUnary.bind(this, 'square')}>{this.operationSymbol('square')}</Button>
+					<Button onClick={this.onUnary.bind(this, 'reciprocal')}>{this.operationSymbol('reciprocal')}</Button>
 					<Button onClick={this.onClearEntry.bind(this)}>CE</Button>
 					<Button onClick={this.onClear.bind(this)}>C</Button>
 					<Button onClick={this.onBackspace.bind(this)}>&#x232b;</Button>
-					<Button onClick={this.onBinary.bind(this, 'divide')}>&#x00F7;</Button>
+					<Button onClick={this.onBinary.bind(this, 'divide')}>{this.operationSymbol('divide')}</Button>
 					<Button onClick={this.onDigit.bind(this, 7)} className="digit">7</Button>
 					<Button onClick={this.onDigit.bind(this, 8)} className="digit">8</Button>
 					<Button onClick={this.onDigit.bind(this, 9)} className="digit">9</Button>
-					<Button onClick={this.onBinary.bind(this, 'multiply')}>&#x00d7;</Button>
+					<Button onClick={this.onBinary.bind(this, 'multiply')}>{this.operationSymbol('multiply')}</Button>
 					<Button onClick={this.onDigit.bind(this, 4)} className="digit">4</Button>
 					<Button onClick={this.onDigit.bind(this, 5)} className="digit">5</Button>
 					<Button onClick={this.onDigit.bind(this, 6)} className="digit">6</Button>
-					<Button onClick={this.onBinary.bind(this, 'minus')}>&#x2212;</Button>
+					<Button onClick={this.onBinary.bind(this, 'minus')}>{this.operationSymbol('minus')}</Button>
 					<Button onClick={this.onDigit.bind(this, 1)} className="digit">1</Button>
 					<Button onClick={this.onDigit.bind(this, 2)} className="digit">2</Button>
 					<Button onClick={this.onDigit.bind(this, 3)} className="digit">3</Button>
-					<Button onClick={this.onBinary.bind(this, 'plus')}>+</Button>
+					<Button onClick={this.onBinary.bind(this, 'plus')}>{this.operationSymbol('plus')}</Button>
 					<Button onClick={this.onUnary.bind(this, 'plusminus')}>&#x00b1;</Button>
 					<Button onClick={this.onDigit.bind(this, 0)} className="digit">0</Button>
 					<Button onClick={this.onDecimal.bind(this)}>.</Button>
