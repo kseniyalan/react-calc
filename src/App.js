@@ -9,6 +9,7 @@ class App extends Component {
 		currentInput: '',
 		previousInput: '',
 		currentOperation: '',
+		dropInput: false,
 	}
 
 	onClear() {
@@ -16,6 +17,7 @@ class App extends Component {
 			currentInput: '',
 			previousInput: '',
 			currentOperation: '',
+			dropInput: false,
 		});
 	}
 
@@ -24,23 +26,29 @@ class App extends Component {
 	}
 
 	onDigit(digit) {
+		let current = this.state.currentInput;
+		if (this.state.dropInput) {
+			current = '';
+		}
+
 		this.setState({
-			currentInput: `${this.state.currentInput}${digit}`,
+			currentInput: `${current}${digit}`,
+			dropInput: false,
 		});
 	}
 
 	onDecimal() {
 		if (this.state.currentInput.indexOf('.') === -1) {
-			this.setState({
-				currentInput: `${this.state.currentInput}.`,
-			});
+			this.onDigit('.');
 		}
 	}
 
 	onBackspace() {
-		this.setState({
-			currentInput: this.state.currentInput.slice(0, -1),
-		});
+		if (!this.state.dropInput) {
+			this.setState({
+				currentInput: this.state.currentInput.slice(0, -1),
+			});
+		}
 	}
 
 	unaryOperation(op, input) {
@@ -63,6 +71,7 @@ class App extends Component {
 			if (result !== null) {
 				this.setState({
 					currentInput: `${result}`,
+					dropInput: true,
 				});
 			}
 		}
@@ -100,6 +109,7 @@ class App extends Component {
 						this.state.currentInput
 					),
 					currentOperation: '',
+					dropInput: true,
 				}, resolve);
 			} else {
 				resolve();
