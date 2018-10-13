@@ -7,6 +7,7 @@ class Button extends Component {
 	static propTypes = {
 		children: PropTypes.string.isRequired,
 		className: PropTypes.string,
+		onClick: PropTypes.func.isRequired,
 	};
 
 	static defaultProps = {
@@ -14,7 +15,9 @@ class Button extends Component {
 
 	render() {
 		return (
-			<div className={classNames('Button', this.props.className)}>
+			<div className={classNames('Button', this.props.className)}
+			     onClick={this.props.onClick}
+			>
 				{this.props.children}
 			</div>
 		);

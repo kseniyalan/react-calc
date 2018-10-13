@@ -13,7 +13,7 @@ class Display extends Component {
 	render() {
 		return (
 			<div className={classNames('Display')}>
-				0
+				{this.props.children}
 			</div>
 		);
 	}
