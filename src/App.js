@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 import './css/App.less';
 
 import Button from './Button';
+import Display from './Display';
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-		<div style={{flexGrow: 4}}></div>
+		<div className="btns-wrap">
+			<Display/>
+		</div>
 		<div className="btns-wrap">
 			<Button>%</Button>
 			<Button>&#x221a;</Button>
