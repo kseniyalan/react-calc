@@ -14,11 +14,11 @@ class App extends Component {
 		error: false,
 	}
 
-	isCorrectResult(result) {
+	isCorrectResult = result => {
 		return Number.isFinite(result) && !Number.isNaN(result);
 	}
 
-	onClear() {
+	onClear = () => {
 		this.setState({
 			currentInput: '',
 			previousInput: '',
@@ -28,15 +28,14 @@ class App extends Component {
 		});
 	}
 
-	onClearEntry() {
-		this.setState({currentInput: '', error: false});
+	onClearEntry = () => {
+		this.setState({ currentInput: '', error: false });
 	}
 
-	onDigit(digit) {
-		let current = this.state.currentInput;
-		if (this.state.dropInput) {
-			current = '';
-		}
+	onDigit = digit => {
+		const { currentInput, dropInput } = this.state;
+		let current = currentInput;
+		if (dropInput) current = '';
 
 		this.setState({
 			currentInput: `${current}${digit}`,
@@ -45,36 +44,33 @@ class App extends Component {
 		});
 	}
 
-	onDecimal() {
-		if (this.state.currentInput.indexOf('.') === -1) {
-			this.onDigit('.');
-		}
+	onDecimal = () => {
+		if (this.state.currentInput.indexOf('.') === -1) this.onDigit('.');
 	}
 
-	onBackspace() {
-		if (!this.state.dropInput) {
+	onBackspace = () => {
+		const { currentInput, dropInput } = this.state;
+		if (!dropInput) {
 			this.setState({
-				currentInput: this.state.currentInput.slice(0, -1),
+				currentInput: currentInput.slice(0, -1),
 				error: false,
 			});
 		}
 	}
 
-	unaryOperation(op, input) {
+	unaryOperation = (op, input) => {
 		switch(op) {
 			case 'plusminus': return -input;
 			case 'root': return Math.sqrt(input);
 			case 'square': return Math.pow(input, 2);
 			case 'reciprocal': return 1 / input;
 			case 'percent':
-				if (this.state.previousInput !== '') {
-					return this.state.previousInput / 100 * input;
-				}
+				if (this.state.previousInput !== '') return this.state.previousInput / 100 * input;
 		}
 		return null;
 	}
 
-	onUnary(op) {
+	onUnary = (op) => {
 		if (this.state.currentInput !== '') {
 			const result = this.unaryOperation(op, this.state.currentInput);
 			if (result !== null) {
@@ -98,7 +94,7 @@ class App extends Component {
 		});
 	}
 
-	binaryOperation(op, a, b) {
+	binaryOperation = (op, a, b) => {
 		a = Number.parseFloat(a);
 		b = Number.parseFloat(b);
 		switch(op) {
@@ -109,7 +105,7 @@ class App extends Component {
 		}
 	}
 
-	onResult() {
+	onResult = () => {
 		return new Promise((resolve, reject) => {
 			if (this.state.previousInput !== '') {
 				const result = this.binaryOperation(
@@ -117,6 +113,7 @@ class App extends Component {
 					this.state.previousInput,
 					this.state.currentInput
 				);
+
 				this.setState({
 					previousInput: '',
 					currentInput: `${result}`,
@@ -124,13 +121,14 @@ class App extends Component {
 					dropInput: true,
 					error: !this.isCorrectResult(result),
 				}, resolve);
+
 			} else {
 				resolve();
 			}
 		});
 	}
 
-	operationSymbol(op) {
+	operationSymbol = (op) => {
 		switch(op) {
 			case 'percent': return <span>%</span>;
 			case 'root': return <span>&#x221a;</span>;
@@ -145,42 +143,44 @@ class App extends Component {
 	}
 
 	render() {
+		const { error, previousInput, currentOperation, currentInput, } = this.state;
+
 		return (
-			<div className={classNames('App', {shake: this.state.error})}>
+			<div className={classNames('App', {shake: error})}>
 				<div className="btns-wrap">
 					<Display>
-						{this.state.previousInput}
+						{previousInput}
 						&nbsp;
-						{this.operationSymbol(this.state.currentOperation)}
+						{this.operationSymbol(currentOperation)}
 						&nbsp;
-						{this.state.currentInput !== '' ? this.state.currentInput : (this.state.currentOperation === '' ? '0' : '')}
+						{currentInput !== '' ? currentInput : (currentOperation === '' ? '0' : '')}
 					</Display>
 				</div>
 				<div className="btns-wrap">
-					<Button onClick={this.onUnary.bind(this, 'percent')}>%</Button>
-					<Button onClick={this.onUnary.bind(this, 'root')}>{this.operationSymbol('root')}</Button>
-					<Button onClick={this.onUnary.bind(this, 'square')}>{this.operationSymbol('square')}</Button>
-					<Button onClick={this.onUnary.bind(this, 'reciprocal')}>{this.operationSymbol('reciprocal')}</Button>
-					<Button onClick={this.onClearEntry.bind(this)}>CE</Button>
-					<Button onClick={this.onClear.bind(this)}>C</Button>
-					<Button onClick={this.onBackspace.bind(this)}>&#x232b;</Button>
-					<Button onClick={this.onBinary.bind(this, 'divide')}>{this.operationSymbol('divide')}</Button>
-					<Button onClick={this.onDigit.bind(this, 7)} className="digit">7</Button>
-					<Button onClick={this.onDigit.bind(this, 8)} className="digit">8</Button>
-					<Button onClick={this.onDigit.bind(this, 9)} className="digit">9</Button>
-					<Button onClick={this.onBinary.bind(this, 'multiply')}>{this.operationSymbol('multiply')}</Button>
-					<Button onClick={this.onDigit.bind(this, 4)} className="digit">4</Button>
-					<Button onClick={this.onDigit.bind(this, 5)} className="digit">5</Button>
-					<Button onClick={this.onDigit.bind(this, 6)} className="digit">6</Button>
-					<Button onClick={this.onBinary.bind(this, 'minus')}>{this.operationSymbol('minus')}</Button>
-					<Button onClick={this.onDigit.bind(this, 1)} className="digit">1</Button>
-					<Button onClick={this.onDigit.bind(this, 2)} className="digit">2</Button>
-					<Button onClick={this.onDigit.bind(this, 3)} className="digit">3</Button>
-					<Button onClick={this.onBinary.bind(this, 'plus')}>{this.operationSymbol('plus')}</Button>
-					<Button onClick={this.onUnary.bind(this, 'plusminus')}>&#x00b1;</Button>
-					<Button onClick={this.onDigit.bind(this, 0)} className="digit">0</Button>
-					<Button onClick={this.onDecimal.bind(this)}>.</Button>
-					<Button onClick={this.onResult.bind(this)}>=</Button>
+					<Button onClick={() => this.onUnary('percent')}>%</Button>
+					<Button onClick={() => this.onUnary('root')}>{this.operationSymbol('root')}</Button>
+					<Button onClick={() => this.onUnary('square')}>{this.operationSymbol('square')}</Button>
+					<Button onClick={() => this.onUnary('reciprocal')}>{this.operationSymbol('reciprocal')}</Button>
+					<Button onClick={() => this.onClearEntry()}>CE</Button>
+					<Button onClick={() => this.onClear()}>C</Button>
+					<Button onClick={() => this.onBackspace()}>&#x232b;</Button>
+					<Button onClick={() => this.onBinary('divide')}>{this.operationSymbol('divide')}</Button>
+					<Button onClick={() => this.onDigit(7)} className="digit">7</Button>
+					<Button onClick={() => this.onDigit(8)} className="digit">8</Button>
+					<Button onClick={() => this.onDigit(9)} className="digit">9</Button>
+					<Button onClick={() => this.onBinary('multiply')}>{this.operationSymbol('multiply')}</Button>
+					<Button onClick={() => this.onDigit(4)} className="digit">4</Button>
+					<Button onClick={() => this.onDigit(5)} className="digit">5</Button>
+					<Button onClick={() => this.onDigit(6)} className="digit">6</Button>
+					<Button onClick={() => this.onBinary('minus')}>{this.operationSymbol('minus')}</Button>
+					<Button onClick={() => this.onDigit(1)} className="digit">1</Button>
+					<Button onClick={() => this.onDigit(2)} className="digit">2</Button>
+					<Button onClick={() => this.onDigit(3)} className="digit">3</Button>
+					<Button onClick={() => this.onBinary('plus')}>{this.operationSymbol('plus')}</Button>
+					<Button onClick={() => this.onUnary('plusminus')}>&#x00b1;</Button>
+					<Button onClick={() => this.onDigit(0)} className="digit">0</Button>
+					<Button onClick={() => this.onDecimal()}>.</Button>
+					<Button onClick={() => this.onResult()}>=</Button>
 				</div>
 			</div>
 		);
